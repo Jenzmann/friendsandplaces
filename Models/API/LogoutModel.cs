@@ -1,4 +1,4 @@
-﻿namespace FriendsAndPlaces.Models
+﻿namespace FriendsAndPlaces.Models.API
 {
     public class LogoutModel
     {

@@ -1,4 +1,6 @@
 
+using FriendsAndPlaces.Services;
+
 namespace FriendsAndPlaces
 {
     public class Program
@@ -13,6 +15,11 @@ namespace FriendsAndPlaces
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            //Dependency Injection
+            builder.Services.AddSingleton<UserService, UserService>();
+            builder.Services.AddSingleton<AuthTokenService, AuthTokenService>();
+            builder.Services.AddSingleton<LocationService, LocationService>();
 
             var app = builder.Build();
 
