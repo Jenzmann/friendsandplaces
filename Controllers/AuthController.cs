@@ -18,9 +18,14 @@ namespace FriendsAndPlaces.Controllers
         }
 
         //Service4
-        //Request Ready
-        //Implementation Ready
-        [HttpPost(Name = "login")]
+        /// <summary>
+        /// Authenticates a user and returns an authentication token.
+        /// </summary>
+        /// <param name="model">The login credentials.</param>
+        /// <returns>Returns an Ok result with the authentication token if login is successful; otherwise, returns a BadRequest result.</returns>
+        /// <response code="200">Returns the authentication token.</response>
+        /// <response code="400">If the login attempt fails.</response>
+        [HttpPost("login", Name = "login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             var loginValid = _userService.CheckLoginData(model.LoginName, model.Passwort.Passwort);
@@ -33,7 +38,13 @@ namespace FriendsAndPlaces.Controllers
         }
 
         //service2
-        //Request Ready
+        /// <summary>
+        /// Checks if a login name is already in use.
+        /// </summary>
+        /// <param name="id">The login name to check.</param>
+        /// <returns>Returns true if the login name is not in use, otherwise false.</returns>
+        /// <response code="200">Returns true if the login name is not in use.</response>
+        /// <response code="400">If the login name is already in use.</response>
         [HttpGet("checkLoginName")]
         public async Task<IActionResult> CheckUserName([FromQuery] string id)
         {
@@ -57,8 +68,13 @@ namespace FriendsAndPlaces.Controllers
         }
 
         //service1
-        //Request Ready
-        //Implementation Ready
+        /// <summary>
+        /// Registers a new user.
+        /// </summary>
+        /// <param name="userModel">The user data to register.</param>
+        /// <returns>Returns Ok if the user was successfully registered.</returns>
+        /// <response code="200">User registered successfully.</response>
+        /// <response code="400">If the user data is invalid.</response>
         [HttpPost("addUser")]
         public async Task<IActionResult> Register([FromBody] UserModel userModel)
         {
