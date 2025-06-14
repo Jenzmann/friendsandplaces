@@ -22,25 +22,14 @@ namespace FriendsAndPlaces.Services
             _users.RemoveAll(x => x.LoginName == loginName);
         }
 
-        public UserFullModel GetUser(string loginName)
+        public UserFullModel? GetUser(string loginName)
         {
             return _users.FirstOrDefault(x => x.LoginName == loginName);
         }
 
         public List<UserLiteModel> GetAllUsers()
         {
-            var users = new List<UserLiteModel>();
-            foreach (var userFullModel in _users)
-            {
-                users.Add(new UserLiteModel()
-                {
-                    LoginName = userFullModel.LoginName,
-                    NachName = userFullModel.NachName,
-                    Vorname = userFullModel.Vorname,
-                });
-            }
-
-            return users;
+            return _users.Select(userFullModel => new UserLiteModel { LoginName = userFullModel.LoginName, NachName = userFullModel.NachName, Vorname = userFullModel.Vorname, }).ToList();
         }
 
         public bool CheckLoginData(string loginName, string password)
