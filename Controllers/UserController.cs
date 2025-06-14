@@ -1,7 +1,6 @@
 ﻿using FriendsAndPlaces.Models.API;
 using FriendsAndPlaces.Services;
-using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
+using Microsoft.AspNetCore.Mvc; 
 
 namespace FriendsAndPlaces.Controllers
 {
@@ -17,8 +16,14 @@ namespace FriendsAndPlaces.Controllers
         }
 
         //service8
-        //Request Ready
-        //Implementation Ready
+        /// <summary>
+        /// Retrieves all users.
+        /// </summary>
+        /// <param name="login">The login name for authentication.</param>
+        /// <param name="session">The session token for authentication.</param>
+        /// <returns>Returns a list of all users if the authentication is valid.</returns>
+        /// <response code="200">Returns the list of users.</response>
+        /// <response code="400">If the authentication is invalid.</response>
         [HttpGet("getBenutzer")]
         public async Task<IActionResult> GetUser([FromQuery] string login, [FromQuery] string session)
         {
@@ -33,7 +38,15 @@ namespace FriendsAndPlaces.Controllers
         }
 
         //service7
-        //Request Ready
+        /// <summary>
+        /// Retrieves the location of a user.
+        /// </summary>
+        /// <param name="login">The login name for authentication.</param>
+        /// <param name="session">The session token for authentication.</param>
+        /// <param name="id">The ID of the user.</param>
+        /// <returns>Returns the coordinates of the user if online and authenticated.  If the user is offline, it should return the home address. Currently, it returns Ok().</returns>
+        /// <response code="200">Returns the coordinates of the user.</response>
+        /// <response code="400">If the authentication is invalid.</response>
         [HttpGet("getStandort")]
         public async Task<IActionResult> GetLocation([FromQuery] string login, [FromQuery] string session, [FromQuery] string id)
         {
@@ -58,8 +71,13 @@ namespace FriendsAndPlaces.Controllers
         }
 
         //service6
-        //Request Ready
-        //Implementation Ready
+        /// <summary>
+        /// Sets the location coordinates for a user.
+        /// </summary>
+        /// <param name="model">The location data containing the login name, session token, and coordinates.</param>
+        /// <returns>Returns Ok if the location is successfully updated.</returns>
+        /// <response code="200">Location updated successfully.</response>
+        /// <response code="400">If the authentication is invalid.</response>
         [HttpPut("setStandort")]
         public async Task<IActionResult> SetLocation([FromBody] LocationModel model)
         {
