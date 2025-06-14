@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FriendsAndPlaces.Controllers
 {
     [ApiController]
+    [Route("/")]
     public class AuthController : ControllerBase
     {
         private readonly UserService _userService;
