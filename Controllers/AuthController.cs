@@ -16,6 +16,12 @@ namespace FriendsAndPlaces.Controllers
             _userService = userService;
             _authTokenService = authTokenService;
         }
+        
+        [HttpGet("/")]
+        public IActionResult Root()
+        {
+            return Ok(new { message = "Welcome to FriendsAndPlaces API" });
+        }
 
         //Service4
         /// <summary>
