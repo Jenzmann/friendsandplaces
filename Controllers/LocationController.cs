@@ -14,6 +14,7 @@ namespace FriendsAndPlaces.Controllers
             _locationService = locationService;
         }
 
+        //todo
         //service3
         /// <summary>
         /// Retrieves the city name for a given postal code.
@@ -27,25 +28,25 @@ namespace FriendsAndPlaces.Controllers
         [HttpGet("getOrt")]
         public async Task<IActionResult> GetLocationFromPostalCode([FromQuery] string postalcode, [FromQuery] string username)
         {
-            
-            return Ok(await _locationService.GetCityFromPostalCode(postalcode));
+            return Ok(await _locationService.GetCityFromPostalCode(postalcode).ConfigureAwait(false));
         }
-
+        
+        //todo
         //service9
         /// <summary>
-        /// Retrieves location information based on the provided address details.
+        /// Retrieves geographical coordinates based on the provided address details.
         /// </summary>
-        /// <param name="land">The country.</param>
+        /// <param name="land">The country code.</param>
         /// <param name="plz">The postal code.</param>
-        /// <param name="ort">The city.</param>
+        /// <param name="ort">The city or town name.</param>
         /// <param name="strasse">The street address.</param>
-        /// <returns>Returns Ok if the location is found.</returns>
-        /// <response code="200">Location found successfully.</response>
-        /// <response code="400">If the address is invalid or not found.</response>
+        /// <returns>Returns an Ok result with the coordinates for the specified address.</returns>
+        /// <response code="200">Always returns 200 OK with coordinate information (latitude and longitude).</response>
         [HttpGet("getStandortPerAdresse")]
         public async Task<IActionResult> GetLocationFromAddress([FromQuery] string land, [FromQuery] string plz, [FromQuery] string ort, [FromQuery] string strasse)
         {
-            return Ok();
+            var coordinates = await _locationService.GetLocationFromAddress(land, plz, ort, strasse).ConfigureAwait(false);
+            return Ok(coordinates);
         }
     }
 }

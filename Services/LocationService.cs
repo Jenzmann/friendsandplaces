@@ -1,4 +1,5 @@
-﻿using FriendsAndPlaces.Models.Internal;
+﻿using FriendsAndPlaces.Models.API;
+using FriendsAndPlaces.Models.Internal;
 
 namespace FriendsAndPlaces.Services
 {
@@ -21,6 +22,23 @@ namespace FriendsAndPlaces.Services
 
             var city = cities.PostalCodes.FirstOrDefault(x => x.CountryCode == "DE").PlaceName;
             return city;
+        }
+        
+        public async Task<CoordinateModel> GetLocationFromAddress(string country, string postalCode, string city, string street)
+        {
+            //todo
+            // var response = await _httpClient.GetFromJsonAsync<GeoNamesAddressModel>($"http://api.geonames.org/searchJSON?country={country}&postalcode={postalCode}&city={city}&street={street}&username=friendsandplaces");
+            // if (response == null || !response.Geonames.Any())
+            // {
+            //     throw new Exception("GetLocationFromAddress failed");
+            // }
+            //
+            // var location = response.Geonames.FirstOrDefault();
+            return new CoordinateModel
+            {
+                Breitengrad = 0,
+                Laengengrad = 0
+            };
         }
     }
 }

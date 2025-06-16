@@ -16,7 +16,26 @@ namespace FriendsAndPlaces.Services
         {
             _users.Add(new UserFullModel(user));
         }
+        
+        public bool UpdateLocation(string loginName, LocationModel location)
+        {
+            var user = _users.FirstOrDefault(x => x.LoginName == loginName);
+            if (user == null)
+            {
+                return false;
+            }
 
+            user.Breitengrad = location.Standort.Breitengrad;
+            user.Laengengrad = location.Standort.Laengengrad;
+            return true;
+        }
+        
+        public CoordinateModel? GetLocation(string loginName)
+        {
+            var user = GetUser(loginName);
+            return user == null ? null : new CoordinateModel { Breitengrad = user.Breitengrad, Laengengrad = user.Laengengrad };
+        }
+        
         public void RemoveUser(string loginName)
         {
             _users.RemoveAll(x => x.LoginName == loginName);

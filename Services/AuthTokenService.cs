@@ -4,22 +4,15 @@ namespace FriendsAndPlaces.Services
 {
     public class AuthTokenService
     {
-        public ConcurrentDictionary<string, string> _authTokens;
+        private readonly ConcurrentDictionary<string, string> _authTokens = new ConcurrentDictionary<string, string>();
 
-        public AuthTokenService()
+        public string GetOrCreateToken(string loginName)
         {
-            _authTokens = new ConcurrentDictionary<string, string>();
-        }
-
-        public string AddAuth(string loginName)
-        {
-            var token = Guid.NewGuid().ToString();
-            if (_authTokens.TryAdd(loginName, token))
-            {
-                return token;
-            }
-
-            throw new Exception("AddAuth failed");
+            _authTokens.TryGetValue(loginName, out var t);
+            var token = t ?? Guid.NewGuid().ToString();
+            _authTokens.TryAdd(loginName, token);
+            
+            return token;
         }
 
         public void RemoveAuth(string loginName)
@@ -39,12 +32,7 @@ namespace FriendsAndPlaces.Services
 
         public bool HasAuth(string loginName)
         {
-            if (!_authTokens.TryGetValue(loginName, out var _))
-            {
-                return false;
-            }
-
-            return true;
+            return _authTokens.TryGetValue(loginName, out var _);
         }
     }
 }

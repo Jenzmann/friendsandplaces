@@ -22,19 +22,19 @@ namespace FriendsAndPlaces.Controllers
         /// Authenticates a user and returns an authentication token.
         /// </summary>
         /// <param name="model">The login credentials.</param>
-        /// <returns>Returns an Ok result with the authentication token if login is successful; otherwise, returns a BadRequest result.</returns>
-        /// <response code="200">Returns the authentication token.</response>
-        /// <response code="400">If the login attempt fails.</response>
-        [HttpPost("login", Name = "login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        /// <returns>Returns an Ok result with either a session ID or an empty object.</returns>
+        /// <response code="200">Always returns 200 OK. Returns a JSON object with 'sessionID' if login is successful, or an empty JSON object if login fails.</response>
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginModel model)
         {
             var loginValid = _userService.CheckLoginData(model.LoginName, model.Passwort.Passwort);
-            if (loginValid)
+            if (!loginValid)
             {
-                var token = _authTokenService.AddAuth(model.LoginName);
-                return Ok(token);
+                return Ok(new { });
             }
-            return BadRequest();
+
+            var token = _authTokenService.GetOrCreateToken(model.LoginName);
+            return Ok(new { sessionID = token });
         }
 
         //service2
@@ -42,29 +42,32 @@ namespace FriendsAndPlaces.Controllers
         /// Checks if a login name is already in use.
         /// </summary>
         /// <param name="id">The login name to check.</param>
-        /// <returns>Returns true if the login name is not in use, otherwise false.</returns>
-        /// <response code="200">Returns true if the login name is not in use.</response>
-        /// <response code="400">If the login name is already in use.</response>
+        /// <returns>Returns an Ok result with a JSON response indicating whether the login name is available.</returns>
+        /// <response code="200">Always returns 200 OK. The response body contains a JSON object with 'ergebnis' set to true if the login name is available (not in use), or false if it's already taken.</response>
         [HttpGet("checkLoginName")]
-        public async Task<IActionResult> CheckUserName([FromQuery] string id)
+        public IActionResult CheckUserName([FromQuery] string id)
         {
             var isUsed = _userService.LoginNameExists(id);
-            return Ok(!isUsed);
+            return Ok(new {ergebnis = !isUsed});
         }
 
-        //service 5
-        //Request Ready
-        //Implementation Ready
-        [HttpGet("logout")]
-        public async Task<IActionResult> Logout([FromBody] LogoutModel model)
+        //service5
+        /// <summary>
+        /// Logs out a user by invalidating their session token.
+        /// </summary>
+        /// <param name="model">The logout model containing login name and session token.</param>
+        /// <returns>Returns an Ok result with a JSON response indicating whether the logout was successful.</returns>
+        /// <response code="200">Always returns 200 OK. The response body contains a JSON object with 'ergebnis' set to true if logout was successful, or false if the session validation failed.</response>
+        [HttpPost("logout")]
+        public IActionResult Logout([FromBody] LogoutModel model)
         {
             if (_authTokenService.ValidateAuth(model.LoginName, model.Sitzung))
             {
                 _authTokenService.RemoveAuth(model.LoginName);
-                return Ok();
+                return Ok(new {ergebnis = true});
             }
 
-            return BadRequest();
+            return Ok(new {ergebnis = false});
         }
 
         //service1
@@ -72,14 +75,18 @@ namespace FriendsAndPlaces.Controllers
         /// Registers a new user.
         /// </summary>
         /// <param name="userModel">The user data to register.</param>
-        /// <returns>Returns Ok if the user was successfully registered.</returns>
-        /// <response code="200">User registered successfully.</response>
-        /// <response code="400">If the user data is invalid.</response>
+        /// <returns>Returns an Ok result with a JSON response. The JSON response indicates whether the registration was successful or provides an error message.</returns>
+        /// <response code="200">Always returns 200 OK. The response body contains a JSON object with 'ergebnis' (true for success, false for failure) and 'meldung' (an error message if 'ergebnis' is false).</response>
         [HttpPost("addUser")]
-        public async Task<IActionResult> Register([FromBody] UserModel userModel)
+        public IActionResult Register([FromBody] UserModel userModel)
         {
+            if (_userService.LoginNameExists(userModel.LoginName))
+            {
+                return Ok(new { ergebnis = false, meldung = "LoginName bereits vorhanden" });
+            }
+
             _userService.AddUser(userModel);
-            return Ok();
+            return Ok(new { ergebnis = true, meldung = "" });
         }
     }
 }

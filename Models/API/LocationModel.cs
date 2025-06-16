@@ -10,7 +10,7 @@
 
     public class CoordinateModel
     {
-        public int Breitengrad { get; set; }
-        public int Laengengrad { get; set; }
+        public float? Breitengrad { get; set; }
+        public float? Laengengrad { get; set; }
     }
 }
