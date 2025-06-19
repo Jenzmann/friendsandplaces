@@ -26,18 +26,19 @@ namespace FriendsAndPlaces.Services
         
         public async Task<CoordinateModel> GetLocationFromAddress(string country, string postalCode, string city, string street)
         {
-            //todo
-            // var response = await _httpClient.GetFromJsonAsync<GeoNamesAddressModel>($"http://api.geonames.org/searchJSON?country={country}&postalcode={postalCode}&city={city}&street={street}&username=friendsandplaces");
-            // if (response == null || !response.Geonames.Any())
-            // {
-            //     throw new Exception("GetLocationFromAddress failed");
-            // }
-            //
-            // var location = response.Geonames.FirstOrDefault();
+            var apiKey = "d15485b155c74a65908195eb49ccf398";
+            
+             var response = await _httpClient.GetFromJsonAsync<GeoapifyAdressModel>($"https://api.geoapify.com/v1/geocode/search?text={street}%2C%20{postalCode}%20{city}%2C%20{country}&apiKey={apiKey}");
+             if (response == null || !response.Features.Any())
+             {
+                 throw new Exception("GetLocationFromAddress failed");
+             }
+            
+             var location = response.Features.FirstOrDefault().Geometry.Coordinates;
             return new CoordinateModel
             {
-                Breitengrad = 0,
-                Laengengrad = 0
+                Breitengrad = location[0],
+                Laengengrad = location[1]
             };
         }
     }
