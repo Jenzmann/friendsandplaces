@@ -6,9 +6,13 @@ namespace FriendsAndPlaces.Services
     public class UserService
     {
         private List<UserFullModel> _users;
+        private AuthTokenService _authTokenService;
+        private LocationService _locationService;
 
-        public UserService()
+        public UserService(AuthTokenService authTokenService, LocationService locationService)
         {
+            _authTokenService = authTokenService;
+            _locationService = locationService;
             _users = new List<UserFullModel>();
         }
 
@@ -30,10 +34,19 @@ namespace FriendsAndPlaces.Services
             return true;
         }
         
-        public CoordinateModel? GetLocation(string loginName)
+        public async Task<CoordinateModel>? GetLocation(string loginName)
         {
             var user = GetUser(loginName);
-            return user == null ? null : new CoordinateModel { Breitengrad = user.Breitengrad, Laengengrad = user.Laengengrad };
+            if (user == null)
+            {
+                return null;
+            }
+            if (_authTokenService.HasAuth(loginName))
+            {
+                return new CoordinateModel { Breitengrad = user.Breitengrad, Laengengrad = user.Laengengrad };
+            }
+            
+            return await _locationService.GetLocationFromAddress(user.Land, user.Plz, user.Ort, user.Strasse);
         }
         
         public void RemoveUser(string loginName)
