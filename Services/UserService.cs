@@ -43,7 +43,10 @@ namespace FriendsAndPlaces.Services
             }
             if (_authTokenService.HasAuth(loginName))
             {
-                return new CoordinateModel { Breitengrad = user.Breitengrad, Laengengrad = user.Laengengrad };
+                if (user.Breitengrad != null && user.Laengengrad != null)
+                {
+                    return new CoordinateModel { Breitengrad = user.Breitengrad, Laengengrad = user.Laengengrad };
+                }
             }
             
             return await _locationService.GetLocationFromAddress(user.Land, user.Plz, user.Ort, user.Strasse);

@@ -46,14 +46,14 @@ namespace FriendsAndPlaces.Controllers
         /// <returns>Returns an Ok result with either the user's coordinates or an empty object if authentication fails.</returns>
         /// <response code="200">Always returns 200 OK. Returns the coordinates if authentication is valid and the requested user is online, otherwise returns an empty JSON object.</response>
         [HttpGet("getStandort")]
-        public IActionResult GetLocation([FromQuery] string login, [FromQuery] string session, [FromQuery] string id)
+        public async Task<IActionResult> GetLocation([FromQuery] string login, [FromQuery] string session, [FromQuery] string id)
         {
-            if (!_authTokenService.ValidateAuth(login, session) || !_authTokenService.HasAuth(id))
+            if (!_authTokenService.ValidateAuth(login, session))
             {
                 return Ok(new {});
             }
             
-            var cordination = _userService.GetLocation(id);
+            var cordination = await _userService.GetLocation(id).ConfigureAwait(false);
             return Ok(cordination);
         }
 
