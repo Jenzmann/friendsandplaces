@@ -53,8 +53,8 @@ namespace FriendsAndPlaces.Controllers
         [HttpGet("checkLoginName")]
         public IActionResult CheckUserName([FromQuery] string id)
         {
-            var isUsed = _userService.LoginNameExists(id);
-            return Ok(new {ergebnis = !isUsed});
+            var isValid = _userService.LoginNameValid(id);
+            return Ok(new {ergebnis = isValid});
         }
 
         //service5
@@ -86,7 +86,7 @@ namespace FriendsAndPlaces.Controllers
         [HttpPost("addUser")]
         public IActionResult Register([FromBody] UserModel userModel)
         {
-            if (_userService.LoginNameExists(userModel.LoginName))
+            if (!_userService.LoginNameValid(userModel.LoginName))
             {
                 return Ok(new { ergebnis = false, meldung = "LoginName bereits vorhanden" });
             }

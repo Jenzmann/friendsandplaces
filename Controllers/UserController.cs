@@ -33,7 +33,7 @@ namespace FriendsAndPlaces.Controllers
 
             var users = _userService.GetAllUsers();
 
-            return Ok(users);
+            return Ok(new{benutzerliste = users});
         }
 
         //service7

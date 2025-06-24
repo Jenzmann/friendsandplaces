@@ -56,9 +56,13 @@ namespace FriendsAndPlaces.Services
             return _users.Any(x => x.LoginName == loginName && x.Passwort.Passwort == password);
         }
 
-        public bool LoginNameExists(string loginName)
+        public bool LoginNameValid(string loginName)
         {
-            return _users.Any(x => x.LoginName == loginName);
+            if (loginName.Length < 5)
+            {
+                return false;
+            }
+            return !_users.Any(x => x.LoginName == loginName);
         }
     }
 }

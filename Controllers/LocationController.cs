@@ -1,4 +1,5 @@
-﻿using FriendsAndPlaces.Models.Internal;
+﻿using System.Text.Json;
+using FriendsAndPlaces.Models.Internal;
 using FriendsAndPlaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,14 +8,12 @@ namespace FriendsAndPlaces.Controllers
     public class LocationController : Controller
     {
         private readonly LocationService _locationService;
-
         
         public LocationController(LocationService locationService)
         {
             _locationService = locationService;
         }
-
-        //todo
+        
         //service3
         /// <summary>
         /// Retrieves the city name for a given postal code.
@@ -23,15 +22,15 @@ namespace FriendsAndPlaces.Controllers
         /// <param name="username">The username for authentication (friendsandplaces).</param>
         /// <returns>Returns the city name associated with the postal code.</returns>
         /// <response code="200">Returns the city name.</response>
-        /// <response code="400">If the postal code is invalid or not found.</response>
         /// <response code="401">If the username is incorrect.</response>
         [HttpGet("getOrt")]
+        [Produces("application/json")]
         public async Task<IActionResult> GetLocationFromPostalCode([FromQuery] string postalcode, [FromQuery] string username)
         {
-            return Ok(await _locationService.GetCityFromPostalCode(postalcode).ConfigureAwait(false));
+            var result =  await _locationService.GetCityFromPostalCode(postalcode, username).ConfigureAwait(false);
+            return StatusCode((int)result.StatusCode, JsonDocument.Parse(await result.Content.ReadAsStringAsync()));
         }
         
-        //todo
         //service9
         /// <summary>
         /// Retrieves geographical coordinates based on the provided address details.
