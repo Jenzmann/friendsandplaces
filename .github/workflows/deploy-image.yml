@@ -24,7 +24,7 @@ jobs:
           password: ${{ secrets.REGISTRY_GITHUB_TOKEN }}
 
       - name: Build Docker
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/friendsandplaces:${{ env.DOCKER_TAG }} .
+        run: docker build -t ghcr.io/jenzmann/friendsandplaces:${{ env.DOCKER_TAG }} .
 
       - name: Push Docker to ghcr
-        run: docker push ghcr.io/${{ github.repository_owner }}/friendsandplaces:${{ env.DOCKER_TAG }}
+        run: docker push ghcr.io/jenzmann/friendsandplaces:${{ env.DOCKER_TAG }}
